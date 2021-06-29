@@ -1,8 +1,8 @@
-from pre_processing_functions import PreProcess
-from imports_manager import *
-from file_path_manager import FilePathManager
-from research_coin_symbols import research_ocin_symbol_list
-from dataframe import CoinData
+from DataManagement.pre_processing_functions import PreProcess
+# from imports_manager import *
+from DataManagement.file_path_manager import FilePathManager
+from DataManagement.research_coin_symbols import research_ocin_symbol_list
+from DataManagement.coin_data import CoinData
 from dateutil import parser
 from binance.client import Client
 import pandas as pd
@@ -16,7 +16,6 @@ sys.path.append('./')
 
 from constants import (STRING_KEY_NUM_MINUTE_DICT, TIMESTAMP_COLUMN,
                        TIMESTAMP_FORMAT, CLOSE_COLUMN, VOLUME_COLUMN)
-# from DataManagement.dataframe import CoinData
 
 
 class DataManager:
@@ -140,4 +139,4 @@ class DataManager:
 if __name__ == "__main__":
 
     dm = DataManager()
-    dm.download_historical_data(coin_pairs=[research_ocin_symbol_list])
+    dm.download_historical_data(coin_pairs=research_ocin_symbol_list)

@@ -2,3 +2,5 @@
 /HistoricalData
 /__pycache__
 DataManagement/__pycache__/data_manager.cpython-38.pyc
+/.cpython
+/.__pycache__
