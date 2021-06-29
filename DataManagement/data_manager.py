@@ -29,6 +29,12 @@ class DataManager:
 
         self.binance_client = Client(api_key=API_KEY, api_secret=API_SECRET)
 
+    def _initialize_binance_client(self):
+        API_KEY = '7NHvWCOeZH6vYvTsjel1GJ3ab1bf59lYXVAsyLa8KEH6nIQG7zD7546s2HF86Gdq'
+        API_SECRET = 'dU3sV6hd5rfkwT8iNtK2wFjAyJMvAfl9ywGQcZyIXAvI5CGz19z90wmKrNs1EgJX'
+
+        self.binance_client = Client(api_key=API_KEY, api_secret=API_SECRET)
+
     def get_historical_data_CoinData(self, symbol: str, kline_size: str) -> CoinData:
         return CoinData(self.get_historical_data_DataFrame(symbol, kline_size), symbol, kline_size_string=kline_size)
 
