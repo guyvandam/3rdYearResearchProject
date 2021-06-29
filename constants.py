@@ -7,9 +7,10 @@ FOUR_HOURS = "4h"
 
 ONE_DAY = "1d"
 
-STRING_KEY_NUM_MINUTE_DICT = {ONE_MINUTE: 1, FIVE_MINUTE: 5, FIFTEEN_MINUTES: 15, ONE_HOUR: 60, FOUR_HOURS: 240, ONE_DAY: 1440}
+STRING_KEY_NUM_MINUTE_DICT = {ONE_MINUTE: 1, FIVE_MINUTE: 5,
+                              FIFTEEN_MINUTES: 15, ONE_HOUR: 60, FOUR_HOURS: 240, ONE_DAY: 1440}
 
-############################### column names
+# column names
 TIME_STAMP_COLUMN = 'timestamp'
 TIMESTAMP_COLUMN = 'timestamp'
 

@@ -1,7 +1,6 @@
-from constants import STRING_KEY_NUM_MINUTE_DICT
 import sys
 sys.path.append('./')
-
+from constants import STRING_KEY_NUM_MINUTE_DICT
 
 class CoinData():
 

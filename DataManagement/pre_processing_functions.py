@@ -1,6 +1,7 @@
 import sys
 sys.path.append('./')
-
+import os
+print(os.getcwd())
 from constants import (ATR_ABNORMALITY_COLUMN, ATR_COLUMN, HIGH_COLUMN, HIGH_TIMESTAMP_COLUMN, LOW_TIMESTAMP_COLUMN,
                        LOW_COLUMN, PRECENT_CHANGE_INDECATOR, ATR_ABNORMALITY_THRESHOLD, HIGH_TO_LOW_PRECENT_CHANGE_COLUMN)
 
