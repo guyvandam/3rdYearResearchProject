@@ -1,5 +1,9 @@
+import sys
+import os.path
+import os
+sys.path.append('./')
+
 from DataManagement.pre_processing_functions import PreProcess
-# from imports_manager import *
 from DataManagement.file_path_manager import FilePathManager
 from DataManagement.research_coin_symbols import research_ocin_symbol_list
 from DataManagement.coin_data import CoinData
@@ -9,10 +13,6 @@ import pandas as pd
 import math
 
 from datetime import datetime
-import sys
-import os.path
-import os
-sys.path.append('./')
 
 from constants import (STRING_KEY_NUM_MINUTE_DICT, TIMESTAMP_COLUMN,
                        TIMESTAMP_FORMAT, CLOSE_COLUMN, VOLUME_COLUMN)
@@ -47,7 +47,7 @@ class DataManager:
         if os.path.isfile(file_path):
             df = pd.read_csv(file_path)
         else:
-            self.__get_all_binance(kline_size, symbol)
+            self.__get_all_binance(symbol, kline_size)
 
         self.__set_timestamp_index(df)
 
@@ -130,10 +130,12 @@ class DataManager:
     def download_historical_data(self, time_frames: list = None, coin_pairs: list = None):
         time_frames = ["1m", "5m", "15m", "1h", "4h",
                        "1d"] if time_frames is None else time_frames
+        
         coin_pairs = ["BTCUSDT", "ETHUSDT", "LTCUSDT",
                       "ADAUSDT"] if coin_pairs is None else coin_pairs
         for time_frame in time_frames:
             for coin_pair in coin_pairs:
+                print("coin_pair: %s" % coin_pair)
                 self.__get_all_binance(coin_pair, time_frame, save=True)
 
     def __is_possible_kline_size(self, kline_size):
@@ -145,4 +147,4 @@ class DataManager:
 if __name__ == "__main__":
 
     dm = DataManager()
-    dm.download_historical_data(coin_pairs=research_ocin_symbol_list)
+    dm.download_historical_data(time_frames=["1d", "4h", "1h"], coin_pairs=research_ocin_symbol_list)
