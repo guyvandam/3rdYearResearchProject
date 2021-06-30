@@ -117,10 +117,10 @@ class DataManager:
         self.pre_process_obj.add_precent_change_column(data_df, VOLUME_COLUMN)
         self.pre_process_obj.add_atr_column(data_df)
         self.pre_process_obj.add_atr_abnormality_column(data_df)
-        if kline_size in ['1h', '4h', '1d']:
-            one_minute_df = self.get_historical_data_DataFrame(symbol, '1m')
-            self.pre_process_obj.add_high_to_low_precent_change_column(
-                data_df, kline_size, one_minute_df)
+        # if kline_size in ['1h', '4h', '1d']:
+        #     one_minute_df = self.get_historical_data_DataFrame(symbol, '1m')
+        #     self.pre_process_obj.add_high_to_low_precent_change_column(
+        #         data_df, kline_size, one_minute_df)
 
         if save:
             data_df.to_csv(file_path)
@@ -135,7 +135,6 @@ class DataManager:
                       "ADAUSDT"] if coin_pairs is None else coin_pairs
         for time_frame in time_frames:
             for coin_pair in coin_pairs:
-                print("coin_pair: %s" % coin_pair)
                 self.__get_all_binance(coin_pair, time_frame, save=True)
 
     def __is_possible_kline_size(self, kline_size):
@@ -147,4 +146,4 @@ class DataManager:
 if __name__ == "__main__":
 
     dm = DataManager()
-    dm.download_historical_data(time_frames=["1d", "4h", "1h"], coin_pairs=research_ocin_symbol_list)
+    dm.download_historical_data(time_frames=["1d", "4h", "1h", "1m"], coin_pairs=research_ocin_symbol_list)
