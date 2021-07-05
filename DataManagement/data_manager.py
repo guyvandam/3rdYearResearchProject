@@ -146,4 +146,4 @@ class DataManager:
 if __name__ == "__main__":
 
     dm = DataManager()
-    dm.download_historical_data(time_frames=["1d", "4h", "1h", "1m"], coin_pairs=research_ocin_symbol_list)
+    dm.download_historical_data(time_frames=["1d", "4h", "1h", "1m"], coin_pairs=research_ocin_symbol_list[:5])
