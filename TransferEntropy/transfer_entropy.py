@@ -9,7 +9,7 @@ class TransferEntropy:
         self.lookback = lookback
     
 
-    def transfer_entropy(self, arr1: np.ndarray, arr2: np.ndarray, dim: int = 1, lookback: int = 0):
+    def get_transfer_entropy(self, arr1: np.ndarray, arr2: np.ndarray, dim: int = 1, lookback: int = 0):
     
         # assume the start of each list is the earliest point,  
         # and the end of each list is the latest point.
