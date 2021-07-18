@@ -10,6 +10,7 @@ from DataManagement.coin_data import CoinData
 from dateutil import parser
 from binance.client import Client
 import pandas as pd
+import numpy as np
 import math
 
 from datetime import datetime
@@ -141,6 +142,11 @@ class DataManager:
         if not kline_size in STRING_KEY_NUM_MINUTE_DICT.keys():
             print('not a possible kline size')
             exit()
+
+    def apply_noise(self, df, mu, sigma):
+        noise = np.random.normal(mu, sigma, df.values.shape)
+        df_with_noise = df + noise
+        return df_with_noise
 
 
 if __name__ == "__main__":
