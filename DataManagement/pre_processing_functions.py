@@ -40,7 +40,7 @@ class PreProcess():
     ############################### add precent change column.
     def add_precent_change_column(self, df, column_name):
         precent_change_column_name = column_name + PRECENT_CHANGE_INDECATOR
-        change_series = df[column_name].pct_change()
+        change_series = df[column_name].pct_change().mul(100)
         df[precent_change_column_name] = change_series
 
     ############################### add high -> low or low -> high precent change.

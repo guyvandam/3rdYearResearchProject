@@ -25,10 +25,10 @@ class DataManager:
         self.file_path_manager_obj = FilePathManager()
         self.pre_process_obj = PreProcess()
 
-        API_KEY = '7NHvWCOeZH6vYvTsjel1GJ3ab1bf59lYXVAsyLa8KEH6nIQG7zD7546s2HF86Gdq'
-        API_SECRET = 'dU3sV6hd5rfkwT8iNtK2wFjAyJMvAfl9ywGQcZyIXAvI5CGz19z90wmKrNs1EgJX'
+        # API_KEY = '7NHvWCOeZH6vYvTsjel1GJ3ab1bf59lYXVAsyLa8KEH6nIQG7zD7546s2HF86Gdq'
+        # API_SECRET = 'dU3sV6hd5rfkwT8iNtK2wFjAyJMvAfl9ywGQcZyIXAvI5CGz19z90wmKrNs1EgJX'
 
-        self.binance_client = Client(api_key=API_KEY, api_secret=API_SECRET)
+        # self.binance_client = Client(api_key=API_KEY, api_secret=API_SECRET)
 
     def _initialize_binance_client(self):
         API_KEY = '7NHvWCOeZH6vYvTsjel1GJ3ab1bf59lYXVAsyLa8KEH6nIQG7zD7546s2HF86Gdq'
@@ -70,6 +70,7 @@ class DataManager:
         return old, new
 
     def __get_all_binance(self, symbol, kline_size, save=False):
+        self._initialize_binance_client()
         file_path = self.file_path_manager_obj.get_historical_data_csv_file_path(
             symbol, kline_size)
         if os.path.isfile(file_path):
@@ -143,10 +144,14 @@ class DataManager:
             print('not a possible kline size')
             exit()
 
-    def apply_noise(self, df, mu, sigma):
-        noise = np.random.normal(mu, sigma, df.values.shape)
-        df_with_noise = df + noise
+    def add_noise_to_df(self, df: pd.DataFrame, mu: int = 0, sigma : int = 0.01):
+        absolute_min = abs(df.min().min())
+        sigma = absolute_min/100 # one precent of the smallest value in the dataframe.
+        noise_matrix = np.random.normal(loc=mu, scale=sigma, size=df.shape)
+        df_with_noise = df + noise_matrix
         return df_with_noise
+
+    
 
 
 if __name__ == "__main__":
