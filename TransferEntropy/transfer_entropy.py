@@ -30,6 +30,18 @@ class TransferEntropy:
         #     arr1 = arr1.reshape(len(arr1), 1)
         #     arr2 = arr2.reshape(len(arr2), 1)
 
+        e1 = EEC(xs=arr2)
+        e2 = EEC(arr2[:len(arr2)-1])
+        e3 = EEC(np.concatenate((arr2, arr1[:len(arr1)-1])))
+        e4 = EEC(np.concatenate((arr2[:len(arr2)-1], arr1[:len(arr1)-1])))
+
+        print('e1:', e1)
+        print('e2:', e2)
+        print('e3:', e3)
+        print('e4:', e4)
+        print()
+
+
         TE = EEC(xs=arr2) - \
             EEC(xs=arr2[:len(arr2)-1]) - \
             EEC(xs=np.concatenate((arr2, arr1[:len(arr1)-1]))) + \
