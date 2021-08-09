@@ -1,4 +1,4 @@
-''' Evaluates the entopy using recursive copula splitting.
+''' Evaluates the entropy using recursive copula splitting.
     Please cite as :
     Estimating Differential Entropy using Recursive Copula Splitting
         by Gil Ariel *OrcID and Yoram Louzoun.
@@ -70,10 +70,10 @@ def H2D(xs, params=params, log=np.log):
 
 
 def estimateEntropyUsingCopulas(xs, support=0, level=0, params=params):
-    ''' Evaluates the entopy using recursive copula splitting.
+    ''' Evaluates the entropy using recursive copula splitting.
         Please cite as :
         Estimating Differential Entropy using Recursive Copula Splitting
-            by Gil Ariel *OrcID andYoram Louzoun.
+            by Gil Ariel *OrcID and Yoram Louzoun.
             Entropy 2020, 22(2), 236;
             https://doi.org/10.3390/e22020236
             Python implementation by Daniel Libman.
