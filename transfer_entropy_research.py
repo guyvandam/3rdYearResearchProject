@@ -2,6 +2,7 @@ from DataManagement.data_manager import DataManager
 from DataManagement.coin_data import CoinData
 from TransferEntropy.transfer_entropy import get_transfer_entropy
 from constants import ATR_ABNORMALITY_COLUMN
+from tqdm import tqdm
 # libs
 import pandas as pd
 import numpy as np
@@ -12,10 +13,10 @@ import matplotlib.pyplot as plt
 # plt.rcParams["figure.figsize"] = (70,30)
 
 coin_symbol_list = ["BTCUSDT", "ETHUSDT", "ADAUSDT", "LTCUSDT"]
-feature = "close_pct"
+feature = "close"
 kline_size = "1h"
 main_coin_symbol = "BTCUSDT"
-transfer_entropy_lookback = 3
+transfer_entropy_lookback = 2
 suptitle_fontsize = 40
 font_scale = 3
 candle_size = "1d"
@@ -32,7 +33,6 @@ class TransferEntropyResearch():
         self.coin_data_list = [self.data_manager.get_historical_data_CoinData(coin_symbol, kline_size="1m") for coin_symbol in coin_symbol_list]
         # main_1h_df = data_manager.get_historical_data_CoinData(main_coin_symbol, kline_size="1h").df
         self.main_abnormal_timestamp_list = self.main_1d_df[self.main_1d_df[ATR_ABNORMALITY_COLUMN] == 1].index
-        print(self.main_abnormal_timestamp_list)
         self.df = None
         # rows = 500
         # cols = 4
@@ -51,53 +51,55 @@ class TransferEntropyResearch():
         self.df.dropna(inplace=True)
         self.df.drop(columns=["timestamp"])
         self.df.set_index("timestamp", inplace=True)
+
+        # self.df = self.df["2020-01-01":]
         # return df
 
-    def get_transfer_entropy_matrix_list_old(self):
-        num_cols = self.df.shape[1]
+    # def get_transfer_entropy_matrix_list_old(self):
+    #     num_cols = self.df.shape[1]
 
-        alltime_correlation_matrix_list, abnormal_correlation_matrix_list = [],[]
-        resampled_list = np.array(self.df.resample("1d"))
+    #     alltime_correlation_matrix_list, abnormal_correlation_matrix_list = [],[]
+    #     resampled_list = np.array(self.df.resample("1d"))
         
-        resampled_array = np.array([temp_df.to_numpy() for _, temp_df in resampled_list])
+    #     resampled_array = np.array([temp_df.to_numpy() for _, temp_df in resampled_list])
         
-        r = 0
-        for iter, timestamp in enumerate([timestamp for timestamp, _ in resampled_list]):
-            temp_correl_matrix = np.empty(shape=(num_cols, num_cols))
+    #     r = 0
+    #     for iter, timestamp in enumerate([timestamp for timestamp, _ in resampled_list]):
+    #         temp_correl_matrix = np.empty(shape=(num_cols, num_cols))
             
-            if iter < transfer_entropy_lookback:
-                continue
+    #         if iter < transfer_entropy_lookback:
+    #             continue
 
-            for i in range(num_cols):
-                for j in range(num_cols):
-                    arr1 = np.array([arr[:, i] for arr in resampled_array[iter-transfer_entropy_lookback:iter]])
-                    arr2 = np.array([arr[:, j] for arr in resampled_array[iter-transfer_entropy_lookback:iter]])
-                    transfer_entropy = get_transfer_entropy(arr1, arr2)
-                    temp_correl_matrix[i,j] = 0 if np.isnan(transfer_entropy) else transfer_entropy
-                    # temp_correl_matrix[i,j] = i+j
+    #         for i in range(num_cols):
+    #             for j in range(num_cols):
+    #                 arr1 = np.array([arr[:, i] for arr in resampled_array[iter-transfer_entropy_lookback:iter]])
+    #                 arr2 = np.array([arr[:, j] for arr in resampled_array[iter-transfer_entropy_lookback:iter]])
+    #                 transfer_entropy = get_transfer_entropy(arr1, arr2)
+    #                 temp_correl_matrix[i,j] = 0 if np.isnan(transfer_entropy) else transfer_entropy
+    #                 # temp_correl_matrix[i,j] = i+j
             
-            # print(temp_correl_matrix)
-            if timestamp in self.main_abnormal_timestamp_list:
-                abnormal_correlation_matrix_list.append(temp_correl_matrix)
+    #         # print(temp_correl_matrix)
+    #         if timestamp in self.main_abnormal_timestamp_list:
+    #             abnormal_correlation_matrix_list.append(temp_correl_matrix)
 
-            alltime_correlation_matrix_list.append(temp_correl_matrix)
+    #         alltime_correlation_matrix_list.append(temp_correl_matrix)
             
-            if r == 3:
-                break
-            r+=1
+    #         if r == 3:
+    #             break
+    #         r+=1
 
-        return np.array(alltime_correlation_matrix_list), np.array(abnormal_correlation_matrix_list)
+    #     return np.array(alltime_correlation_matrix_list), np.array(abnormal_correlation_matrix_list)
 
     def get_transfer_entropy_matrix_list(self):
         num_cols = self.df.shape[1]
 
         alltime_correlation_matrix_list, abnormal_correlation_matrix_list = [],[]
-        resampled_list = np.array(self.df.resample(candle_size)) # 1d
+        resampled_list = self.df.resample(candle_size) # 1d
         
-        # resampled_array = np.array([temp_df.to_numpy() for _, temp_df in resampled_list])
-        
-        r = 0
-        for iter, timestamp in enumerate([timestamp for timestamp, _ in resampled_list]):
+        # normalize dfs by subtracting the mean.
+        resampled_list = [(timestamp, df.sub(df.mean(axis=0))) for timestamp, df in resampled_list]
+
+        for iter, (timestamp, _) in tqdm(enumerate(resampled_list)):
             temp_correl_matrix = np.empty(shape=(num_cols, num_cols))
             
             if iter < transfer_entropy_lookback:
@@ -110,33 +112,22 @@ class TransferEntropyResearch():
                     arr2 = [temp_df[colj].to_numpy() for _, temp_df in resampled_list[iter-transfer_entropy_lookback:iter]]
                     
                     for a1, a2 in zip(arr1, arr2):
-                        # print(len(a1), len(a2))
-                        if len(a1) != 1440 or len(a2) != 1440:
+                        if len(a1) != num_samples or len(a2) != num_samples:
                             is_skip = True
-                            # print(is_skip)
                             break
 
-                    # print(is_skip)
+                    
+                    transfer_entropy_value = 0 if is_skip else get_transfer_entropy(np.flip(arr1, axis=0), np.flip(arr2, axis=0))
+                    temp_correl_matrix[i,j] = 0 if np.isnan(transfer_entropy_value) else transfer_entropy_value
 
-                    # print(arr1)
-                    # print(arr2)
-                    transfer_entropy = 0 if is_skip else get_transfer_entropy(np.flip(arr1, axis=0), np.flip(arr2, axis=0))
-                    temp_correl_matrix[i,j] = 0 if np.isnan(transfer_entropy) else transfer_entropy
-                    # quit()
-                    # temp_correl_matrix[i,j] = i+j
-            
-            # print(temp_correl_matrix)
-            # print(timestamp)
+            # if np.all(temp_correl_matrix == 0):
+            #     continue
+
             if timestamp in self.main_abnormal_timestamp_list:
-                print(timestamp)
-                print("enter")
                 abnormal_correlation_matrix_list.append(temp_correl_matrix)
 
             alltime_correlation_matrix_list.append(temp_correl_matrix)
             
-            # if r == 3:
-            #     break
-            # r+=1
 
         return np.array(alltime_correlation_matrix_list), np.array(abnormal_correlation_matrix_list)
                 
@@ -157,7 +148,7 @@ class TransferEntropyResearch():
 
         alltime_correl_mean = alltime_correlation_matrix_list.mean(axis=0)
         abnormal_correl_mean = abnormal_correlation_matrix_list.mean(axis=0)
-        correl_method = "Transfer Entropy"
+        correl_method = "Transfer_Entropy"
         
         title_data_dict = {
             f"alltime Mean of {candle_size} {correl_method}": alltime_correl_mean, 
@@ -168,7 +159,7 @@ class TransferEntropyResearch():
             self.plot_heatmap_on_axes(data=data, title=title, axes=axes[i])
         
         fig.tight_layout()
-        filename = f"{correl_method}_research_plot.jpg"
+        filename = f"{correl_method}_research_plot_normalized_by_mean_subtraction.jpg"
         fig.savefig(filename)
     
 
