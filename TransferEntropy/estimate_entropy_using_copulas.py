@@ -92,7 +92,7 @@ def estimateEntropyUsingCopulas(xs, support=0, level=0, params=params):
     # Stoping condition no data
     if n == 0:
         return 0
-    # Calculate the empirical cumulative distribution along each dimention
+    # Calculate the empirical cumulative distribution along each dimension
     #    (i.e., the integral transform of marginals).
     H1s = 0
     ys = np.zeros((n, D))

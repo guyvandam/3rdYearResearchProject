@@ -144,12 +144,13 @@ class DataManager:
             print('not a possible kline size')
             exit()
 
-    def add_noise_to_df(self, df: pd.DataFrame, mu: int = 0, sigma : int = 0.01):
-        absolute_min = abs(df.min().min())
+    def add_noise_to_df(self, df: pd.DataFrame, mu: int = 0, sigma : int = None):
+        absolute_min = abs(df.min())
         sigma = absolute_min/100 # one precent of the smallest value in the dataframe.
-        noise_matrix = np.random.normal(loc=mu, scale=sigma, size=df.shape)
-        df_with_noise = df + noise_matrix
-        return df_with_noise
+        num_rows = len(df)
+
+        for col in df.columns:
+            df[col] += np.random.normal(loc=mu, scale=sigma[col], size=num_rows)
 
     
 
