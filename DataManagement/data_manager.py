@@ -144,9 +144,12 @@ class DataManager:
             print('not a possible kline size')
             exit()
 
-    def add_noise_to_df(self, df: pd.DataFrame, mu: int = 0, sigma : int = None):
-        absolute_min = abs(df.min())
-        sigma = absolute_min/100 # one precent of the smallest value in the dataframe.
+    def add_noise_to_df(self, df: pd.DataFrame, mu: int = 0, sigma_value : int = None):
+        if sigma_value is None:
+            absolute_min = abs(df.min())
+            sigma = absolute_min/10 # one precent of the smallest value in the dataframe.
+        else:
+            sigma = pd.Series(index=df.columns, data=[sigma_value]*len(df.columns))
         num_rows = len(df)
 
         for col in df.columns:

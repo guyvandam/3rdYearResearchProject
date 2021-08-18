@@ -1,4 +1,3 @@
-from sympy.utilities.iterables import subsets
 from DataManagement.data_manager import DataManager
 from DataManagement.coin_data import CoinData
 from TransferEntropy.transfer_entropy import get_transfer_entropy
@@ -88,8 +87,7 @@ for i, coli in enumerate(df.columns):
  
 result = pd.DataFrame(data=result, columns=df.columns, index=df.columns)
 sn.heatmap(result, annot=True)
-
-
+    
  
 
 

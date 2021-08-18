@@ -16,8 +16,9 @@ TIMESTAMP_COLUMN = 'timestamp'
 
 HIGH_COLUMN = "high"
 LOW_COLUMN = "low"
-CLOSE_COLUMN = "close"
 OPEN_COLUMN = "open"
+CLOSE_COLUMN = "close"
+HLOC = "hloc"
 
 VOLUME_COLUMN = 'volume'
 
