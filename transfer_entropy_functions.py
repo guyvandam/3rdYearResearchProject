@@ -1,5 +1,6 @@
 from DataManagement.data_manager import DataManager
 from TransferEntropy.transfer_entropy import get_transfer_entropy
+from TransferEntropy.transfer_entropy import EEC
 
 import numpy as np
 import pandas as pd
@@ -9,12 +10,13 @@ from constants import HLOC
 data_manager = DataManager()
 
 
-def get_transfer_entropy_matrix(df,L):
+def get_transfer_entropy_matrix(df,L, is_divide_by_joint_entropy):
     num_cols = len(df.columns)
     n = len(df)
     result = np.ones(shape=(num_cols, num_cols))
     for i, coli in tqdm(enumerate(df.columns)):
         for j, colj in enumerate(df.columns): 
+            joint_entropy = 1
             list_i, list_j = [], []
             arr_i = df[coli].to_numpy()
             arr_j = df[colj].to_numpy()
@@ -24,11 +26,14 @@ def get_transfer_entropy_matrix(df,L):
                 list_i.append(arr_i[l:n-L+l])
                 list_j.append(arr_j[l:n-L+l])
             
+            if is_divide_by_joint_entropy:
+                joint_entropy = EEC(np.array([arr_i, arr_j]).T)
+
             entropy_value = get_transfer_entropy(np.array(list_i), np.array(list_j))
-            if entropy_value is np.nan:
+            if entropy_value is np.nan or joint_entropy is np.nan:
                 quit()
             
-            result[i, j] = entropy_value
+            result[i, j] = entropy_value/joint_entropy
             
     return pd.DataFrame(data=result, columns=df.columns, index=df.columns)
 
@@ -51,11 +56,11 @@ def join_dataframes(coin_data_list, feature):
     df.set_index("timestamp", inplace=True)
     return df
 
-def get_transfer_entropy_matrix_wrapper(raw_df, L=3):
+def get_transfer_entropy_matrix_wrapper(raw_df, L=3, is_divide_by_joint_entropy=True):
     df = raw_df["2021-01-01":].resample("5min").median()
     data_manager.add_noise_to_df(df, sigma_value=10)
     df.dropna(how="any", inplace=True)
-    return get_transfer_entropy_matrix(df, L=L)
+    return get_transfer_entropy_matrix(df, L=L, is_divide_by_joint_entropy=is_divide_by_joint_entropy)
 
 if __name__ == "__main__":
     coin_symbol_list = ["BTCUSDT", "ETHUSDT", "ADAUSDT", "LTCUSDT"]

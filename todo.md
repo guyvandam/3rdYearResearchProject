@@ -1,1 +1,0 @@
-- [] Add folder creation for historical data. (create folder if it doesn't exist)
