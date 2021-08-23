@@ -39,7 +39,7 @@ class DataManager:
     def get_historical_data_CoinData(self, symbol: str, kline_size: str) -> CoinData:
         return CoinData(self.get_historical_data_DataFrame(symbol, kline_size), symbol, kline_size_string=kline_size)
 
-    def get_historical_data_DataFrame(self, symbol, kline_size) -> pd.DataFrame:
+    def get_historical_data_DataFrame(self, symbol, kline_size, is_fillnan : bool = True) -> pd.DataFrame:
         symbol = symbol.upper()
         self.__is_possible_kline_size(kline_size)
         file_path = self.file_path_manager_obj.get_historical_data_csv_file_path(
@@ -51,7 +51,9 @@ class DataManager:
             self.__get_all_binance(symbol, kline_size)
 
         self.__set_timestamp_index(df)
-
+        if is_fillnan:
+            df.fillna(method='ffill', inplace=True)
+            df.fillna(method='bfill', inplace=True)
         return df
 
     def __set_timestamp_index(self, df):
