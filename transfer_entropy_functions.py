@@ -43,17 +43,17 @@ def add_hloc(input_df):
 
 def join_dataframes(coin_data_list, feature):
     df = pd.DataFrame(index=coin_data_list[0].df.index)
-
+    
     for coin_data in coin_data_list:
         if feature == HLOC:
             add_hloc(coin_data.df)
         
-        df = df.join(coin_data.df[feature], how="outer", rsuffix=f"_{coin_data.coin_symbol}", on="timestamp")
+        df = df.join(other=coin_data.df[feature], how="inner", rsuffix=f"_{coin_data.coin_symbol}", on="timestamp")
     
-    df.rename(columns={feature:f"{feature}_{coin_data_list[0].coin_symbol}"}, inplace=True)    
+    df.rename(columns={feature:f"{feature}_{coin_data_list[0].coin_symbol}"}, inplace=True)
+    df.drop_duplicates(keep="first", inplace=True)
     df.dropna(how="any", inplace=True)
-    df.drop(columns=["timestamp"])
-    df.set_index("timestamp", inplace=True)
+
     return df
 
 def get_transfer_entropy_matrix_wrapper(raw_df, L=3, is_divide_by_joint_entropy=True):
