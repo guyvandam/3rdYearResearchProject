@@ -56,11 +56,17 @@ def join_dataframes(coin_data_list, feature):
 
     return df
 
+def get_dataframe_different_assets(asset_symbol_list, candle_size, feature = "hloc"):
+    coin_data_list = [data_manager.get_historical_data_CoinData(asset_symbol, kline_size=candle_size) for asset_symbol in asset_symbol_list]
+    return join_dataframes(coin_data_list, feature, feature)
+
 def get_transfer_entropy_matrix_wrapper(raw_df, L=3, is_divide_by_joint_entropy=True):
     df = raw_df["2021-01-01":].resample("5min").median()
     data_manager.add_noise_to_df(df, sigma_value=10)
     df.dropna(how="any", inplace=True)
     return get_transfer_entropy_matrix(df, L=L, is_divide_by_joint_entropy=is_divide_by_joint_entropy)
+
+
 
 if __name__ == "__main__":
     coin_symbol_list = ["BTCUSDT", "ETHUSDT", "ADAUSDT", "LTCUSDT"]
