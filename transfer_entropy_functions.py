@@ -51,14 +51,17 @@ def join_dataframes(coin_data_list, feature):
         df = df.join(other=coin_data.df[feature], how="inner", rsuffix=f"_{coin_data.coin_symbol}", on="timestamp")
     
     df.rename(columns={feature:f"{feature}_{coin_data_list[0].coin_symbol}"}, inplace=True)
-    df.drop_duplicates(keep="first", inplace=True)
-    df.dropna(how="any", inplace=True)
+    df.reset_index(inplace=True)
+    df.drop_duplicates(subset="timestamp", keep="first", inplace=True)
+    df.set_index(keys=["timestamp"], inplace=True)
+    df.fillna(method='ffill', inplace=True)
+    # df.dropna(how="any", inplace=True)
 
     return df
 
 def get_dataframe_different_assets(asset_symbol_list, candle_size, feature = "hloc"):
     coin_data_list = [data_manager.get_historical_data_CoinData(asset_symbol, kline_size=candle_size) for asset_symbol in asset_symbol_list]
-    return join_dataframes(coin_data_list, feature, feature)
+    return join_dataframes(coin_data_list, feature)
 
 def get_transfer_entropy_matrix_wrapper(raw_df, L=3, is_divide_by_joint_entropy=True):
     df = raw_df["2021-01-01":].resample("5min").median()
