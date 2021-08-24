@@ -12,8 +12,8 @@ def get_transfer_entropy(arr1_iids: np.ndarray, arr2_iids: np.ndarray, prints: b
 
     e1_xs = arr2_iids
     e2_xs = arr2_iids[1:]
-    e3_xs = np.vstack((arr2_iids,arr1_iids[1:]))
-    e4_xs = np.vstack((arr2_iids[1:],arr1_iids[1:]))
+    e3_xs = np.vstack((arr2_iids, arr1_iids[1:]))
+    e4_xs = np.vstack((arr2_iids[1:], arr1_iids[1:]))
 
     e1_xs = e1_xs.T
     e2_xs = e2_xs.T
