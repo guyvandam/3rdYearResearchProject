@@ -1,9 +1,9 @@
 import numpy as np
 from TransferEntropy.estimate_entropy_using_copulas import estimateEntropyUsingCopulas as EEC
-        
-def get_transfer_entropy(arr1_iids: np.ndarray, arr2_iids: np.ndarray, prints: bool = False):
 
-    # assume the start of each list is the earliest iid,  
+
+def get_transfer_entropy(arr1_iids: np.ndarray, arr2_iids: np.ndarray, prints: bool = False):
+    # assume the start of each list is the earliest iid,
     # and the end of each list is the latest iid.
 
     if prints:
@@ -21,10 +21,10 @@ def get_transfer_entropy(arr1_iids: np.ndarray, arr2_iids: np.ndarray, prints: b
     e4_xs = e4_xs.T
 
     if prints:
-        print('e1_xs\n',e1_xs, end='\n\n')
-        print('e2_xs\n',e2_xs, end='\n\n')
-        print('e3_xs\n',e3_xs, end='\n\n')
-        print('e4_xs\n',e4_xs)
+        print('e1_xs\n', e1_xs, end='\n\n')
+        print('e2_xs\n', e2_xs, end='\n\n')
+        print('e3_xs\n', e3_xs, end='\n\n')
+        print('e4_xs\n', e4_xs)
         print()
 
     e1 = EEC(xs=e1_xs)
@@ -39,12 +39,11 @@ def get_transfer_entropy(arr1_iids: np.ndarray, arr2_iids: np.ndarray, prints: b
         print('e3:', e3)
         print('e4:', e4)
         print()
-    
 
-    TE = e1-e2-e3+e4
-    
+    TE = e1 - e2 - e3 + e4
+
     if prints:
-        print('TE: ',TE)
+        print('TE: ', TE)
         print()
 
     return TE
