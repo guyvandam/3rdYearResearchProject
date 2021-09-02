@@ -148,7 +148,8 @@ def estimateEntropyUsingCopulas(xs, support=0, level=0, params=params):
     L = isCorrelated - np.diag(nCorrelated)
     #np.array(symL.nullspace()).T
     Z = Matrix(L).nullspace()  # python unlike matlab doesn't give rational (Z) answer norm(v1)=1
-    Z = np.array(Z).T
+    Z = np.hstack(Z)
+    # Z = np.array(Z).T
     Z = Z != 0  # get 1, 0 values of components
     nBlocks = Z.shape[1]
     if nBlocks >= 2:
