@@ -7,5 +7,9 @@ DataManagement/__pycache__/data_manager.cpython-38.pyc
 TransferEntropy/__pycache__/
 __pycache__
 .DS_Store
-
 .vscode/settings.json
+.idea
+.ipynb_checkpoints
+Archive/.ipynb_checkpoints
+results
+test.ipynb
