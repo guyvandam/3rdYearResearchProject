@@ -80,7 +80,7 @@ class ResultsAnalysis:
             matrix_df = self.__get_matrix_df(df.mean())
         elif function_to_run == "std":
             matrix_df = self.__get_matrix_df(df.std())
-        sns.heatmap(matrix_df, annot=True).set_label(f"all_time_{function_to_run}");
+        sns.heatmap(matrix_df, annot=True).set_title(f"All Time {function_to_run}");
         filename = self.folder + f"/{function_to_run}_heatmap.jpg"
         plt.savefig(filename)
         plt.close()
