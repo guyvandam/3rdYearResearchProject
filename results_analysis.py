@@ -56,6 +56,7 @@ class ResultsAnalysis:
             j+=1
         filename = self.folder + "/histogram.jpg"
         plt.savefig(filename)
+        plt.close()
 
     def __get_matrix_df(self, series):
 
@@ -79,9 +80,10 @@ class ResultsAnalysis:
             matrix_df = self.__get_matrix_df(df.mean())
         elif function_to_run == "std":
             matrix_df = self.__get_matrix_df(df.std())
-        sns.heatmap(matrix_df,annot=True);
+        sns.heatmap(matrix_df, annot=True).set_label(f"all_time_{function_to_run}");
         filename = self.folder + f"/{function_to_run}_heatmap.jpg"
         plt.savefig(filename)
+        plt.close()
 
     def create_mean_heatmap(self, df=None):
         self.__create_heatmap(df, "mean")
@@ -95,8 +97,8 @@ if __name__ == "__main__":
     ra = ResultsAnalysis("09-02-2021__14:51:26")
     ra.initialize()
 
-    # ra.create_histogram_plot()
-    # ra.create_mean_heatmap()
+    ra.create_histogram_plot()
+    ra.create_mean_heatmap()
     ra.create_std_heatmap()
 
 
