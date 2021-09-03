@@ -11,5 +11,4 @@ __pycache__
 .idea
 .ipynb_checkpoints
 Archive/.ipynb_checkpoints
-results
 test.ipynb
