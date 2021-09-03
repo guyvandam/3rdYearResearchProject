@@ -1,0 +1,5 @@
+assets: 'BTCUSDT', 'ETHUSDT', 'ADAUSDT'
+window_size: 7
+sub_tf: 1d
+minutes_on_sub_tf: 1440
+max_subs: None
