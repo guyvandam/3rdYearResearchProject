@@ -29,7 +29,7 @@ class ResultsAnalysis:
         self.te_df = read_csv_wrapper(f"{self.folder}/TransferEntropy.csv")
         self.info_df = pd.read_csv(f"{self.folder}/info.csv")
         self.div_df = self.te_df/self.je_df
-
+        
         self.asset_list = [col.strip('assets:').strip(" '") for col in self.info_df.columns]
         self.asset_string = '_'.join(self.asset_list)
         self.ncols = len(self.asset_list)
@@ -91,6 +91,11 @@ class ResultsAnalysis:
     def create_std_heatmap(self, df=None):
         self.__create_heatmap(df, "std")
 
+    def create_time_dependent_plot(self, df=None):
+        self.div_df.plot(subplots=True, figsize= (15,30))
+        filename = self.folder + f"/time_dependent.jpg"
+        plt.savefig(filename)
+        plt.close()
 
 if __name__ == "__main__":
 
@@ -100,6 +105,7 @@ if __name__ == "__main__":
     ra.create_histogram_plot()
     ra.create_mean_heatmap()
     ra.create_std_heatmap()
+    ra.create_time_dependent_plot()
 
 
     
