@@ -43,13 +43,15 @@ class ResultsAnalysis:
 
         
         fig, axes = plt.subplots(ncols=self.ncols, nrows=self.ncols, figsize=(18,18));
-
+        
+        
         i, j = 0,0
         for col in df.columns:
             if j == self.ncols:
                 j = 0
                 i+=1
             df[col].hist(ax=axes[i,j], density=True);
+            axes[i,j].tick_params(axis='both', labelsize=15)
             if j == 0:
                 axes[i,j].set_ylabel(self.asset_list[i], fontsize = 15)
             if i == 0:
@@ -59,7 +61,9 @@ class ResultsAnalysis:
             j+=1
         filename = self.folder + "/histogram.jpg"
         title = f"Histograms of {description} Between Pairs" 
+        
         fig.suptitle(title, fontsize=25)
+
         plt.savefig(filename)
         plt.close()
 
