@@ -48,7 +48,10 @@ class ResultsAnalysis:
        
         plt.rc('legend',**{'fontsize':15})
 
-        df[columns_to_plot].plot(layout=(self.ncols, self.ncols-1), subplots=True, title = title, figsize=(15,12), fontsize=15)
+        df[columns_to_plot].plot(layout=(self.ncols, self.ncols-1), subplots=True, figsize=(15,12), fontsize=15)
+        fig = plt.gcf()
+        fig.suptitle(title, fontsize=16)
+
         filename = self.folder + "/time_dependent_variables.jpg"
         plt.savefig(filename)
         plt.close()
