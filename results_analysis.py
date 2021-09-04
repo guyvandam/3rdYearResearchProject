@@ -36,8 +36,10 @@ class ResultsAnalysis:
 
     # there might be a problem with saving it in this function. maybe it will return the plot and we'll save it at the notebook.
     def create_histogram_plot(self, df = None):
+        description = ""
         if df is None:
             df = self.div_df
+            description = "Transfer Entropy Divided by Joint Entropy"
         
         fig, axes = plt.subplots(ncols=self.ncols, nrows=self.ncols, figsize=(20,20));
 
@@ -74,22 +76,27 @@ class ResultsAnalysis:
         return pd.DataFrame(data=matrix, index=self.asset_list, columns=self.asset_list)
 
     def __create_heatmap(self, df, function_to_run):
+        description = ""
         if df is None:
             df = self.div_df
-        if function_to_run == "mean":
+            description = "Transfer Entropy Divided by Joint Entropy"
+
+        if function_to_run == "Mean":
             matrix_df = self.__get_matrix_df(df.mean())
-        elif function_to_run == "std":
+        elif function_to_run == "Std":
             matrix_df = self.__get_matrix_df(df.std())
-        sns.heatmap(matrix_df, annot=True).set_title(f"All Time {function_to_run}");
+        
+        title = f"All Time {function_to_run} of {description}" 
+        sns.heatmap(matrix_df, annot=True).set_title(title);
         filename = self.folder + f"/{function_to_run}_heatmap.jpg"
         plt.savefig(filename)
         plt.close()
 
     def create_mean_heatmap(self, df=None):
-        self.__create_heatmap(df, "mean")
+        self.__create_heatmap(df, "Mean")
 
     def create_std_heatmap(self, df=None):
-        self.__create_heatmap(df, "std")
+        self.__create_heatmap(df, "Std")
 
     def create_time_dependent_plot(self, df=None):
         self.div_df.plot(subplots=True, figsize= (15,30))
