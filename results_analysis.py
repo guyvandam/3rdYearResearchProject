@@ -40,8 +40,9 @@ class ResultsAnalysis:
         if df is None:
             df = self.div_df
             description = "Transfer Entropy Divided by Joint Entropy"
+
         
-        fig, axes = plt.subplots(ncols=self.ncols, nrows=self.ncols, figsize=(20,20));
+        fig, axes = plt.subplots(ncols=self.ncols, nrows=self.ncols, figsize=(18,18));
 
         i, j = 0,0
         for col in df.columns:
@@ -50,13 +51,15 @@ class ResultsAnalysis:
                 i+=1
             df[col].hist(ax=axes[i,j], density=True);
             if j == 0:
-                axes[i,j].set_ylabel(self.asset_list[i])
+                axes[i,j].set_ylabel(self.asset_list[i], fontsize = 15)
             if i == 0:
-                axes[i,j].set_xlabel(self.asset_list[j])    
+                axes[i,j].set_xlabel(self.asset_list[j], fontsize = 15)    
                 axes[i,j].xaxis.set_label_position('top') 
                 
             j+=1
         filename = self.folder + "/histogram.jpg"
+        title = f"Histograms of {description} Between Pairs" 
+        fig.suptitle(title, fontsize=25)
         plt.savefig(filename)
         plt.close()
 
@@ -110,9 +113,9 @@ if __name__ == "__main__":
     ra.initialize()
 
     ra.create_histogram_plot()
-    ra.create_mean_heatmap()
-    ra.create_std_heatmap()
-    ra.create_time_dependent_plot()
+    # ra.create_mean_heatmap()
+    # ra.create_std_heatmap()
+    # ra.create_time_dependent_plot()
 
 
     
