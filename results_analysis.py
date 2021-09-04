@@ -2,6 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
+
 def read_csv_wrapper(filepath) -> pd.DataFrame:
     df = pd.read_csv(filepath, index_col = 0)
     df.set_index(pd.to_datetime(df.index), inplace = True)
@@ -34,7 +35,24 @@ class ResultsAnalysis:
         self.asset_string = '_'.join(self.asset_list)
         self.ncols = len(self.asset_list)
 
-    # there might be a problem with saving it in this function. maybe it will return the plot and we'll save it at the notebook.
+
+    def create_time_dependent_plot(self, df=None):
+        description = ""
+        if df is None:
+            df = self.div_df
+            description = "Transfer Entropy Divided by Joint Entropy"
+        
+        df.rename(columns=lambda x: x.replace("_", "->"), inplace=True)
+        columns_to_plot = [col for col in df.columns if len(set(col.split("->"))) > 1]
+        title = f"{description} Between Pairs as Time Dependent Variables" 
+       
+        plt.rc('legend',**{'fontsize':15})
+
+        df[columns_to_plot].plot(layout=(self.ncols, self.ncols-1), subplots=True, title = title, figsize=(15,12), fontsize=15)
+        filename = self.folder + "/time_dependent_variables.jpg"
+        plt.savefig(filename)
+        plt.close()
+
     def create_histogram_plot(self, df = None):
         description = ""
         if df is None:
@@ -105,21 +123,21 @@ class ResultsAnalysis:
     def create_std_heatmap(self, df=None):
         self.__create_heatmap(df, "Std")
 
-    def create_time_dependent_plot(self, df=None):
-        self.div_df.plot(subplots=True, figsize= (15,30))
-        filename = self.folder + f"/time_dependent.jpg"
-        plt.savefig(filename)
-        plt.close()
+    # def create_time_dependent_plot(self, df=None):
+    #     self.div_df.plot(subplots=True, figsize= (15,30))
+    #     filename = self.folder + f"/time_dependent.jpg"
+    #     plt.savefig(filename)
+    #     plt.close()
 
 if __name__ == "__main__":
 
     ra = ResultsAnalysis("09-02-2021__14:51:26")
     ra.initialize()
 
-    ra.create_histogram_plot()
+    # ra.create_histogram_plot()
     # ra.create_mean_heatmap()
     # ra.create_std_heatmap()
     # ra.create_time_dependent_plot()
-
+    ra.create_time_dependent_plot()
 
     
