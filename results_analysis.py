@@ -1,3 +1,4 @@
+from numpy.matrixlib.defmatrix import matrix
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
@@ -127,6 +128,28 @@ class ResultsAnalysis:
     def create_std_heatmap(self, df=None):
         self.__create_heatmap(df, "Std")
 
+    def create_heatmaps(self, df=None):
+        description = ""
+        if df is None:
+            df = self.div_df
+            description = "Transfer Entropy / Joint Entropy"
+        
+        mean_df = self.__get_matrix_df(df.mean())
+        std_df = self.__get_matrix_df(df.std())
+
+        _, axes = plt.subplots(ncols=2, nrows=1, figsize=(18,8));
+        functions_to_run_dict = {"Mean":mean_df, "Std":std_df}
+        for i, (function_to_run, temp_df) in enumerate(functions_to_run_dict.items()):
+            title = f"All Time {function_to_run} of {description}" 
+            axes[i].tick_params(axis='both', labelsize=18)
+            sns.heatmap(temp_df, annot=True, ax=axes[i], annot_kws={"fontsize":20}).set_title(title, fontsize = 20);
+
+
+        filename = self.folder + "/heatmaps.jpg"
+        plt.savefig(filename)
+        plt.close()
+
+
     # def create_time_dependent_plot(self, df=None):
     #     self.div_df.plot(subplots=True, figsize= (15,30))
     #     filename = self.folder + f"/time_dependent.jpg"
@@ -142,6 +165,6 @@ if __name__ == "__main__":
     # ra.create_mean_heatmap()
     # ra.create_std_heatmap()
     # ra.create_time_dependent_plot()
-    ra.create_time_dependent_plot()
-
+    # ra.create_time_dependent_plot()
+    ra.create_heatmaps()
     
