@@ -136,12 +136,12 @@ class ResultsAnalysis:
         
         mean_df = self.__get_matrix_df(df.mean())
         std_df = self.__get_matrix_df(df.std())
-
+        sns.set(font_scale=1.5)
         _, axes = plt.subplots(ncols=2, nrows=1, figsize=(18,8));
         functions_to_run_dict = {"Mean":mean_df, "Std":std_df}
         for i, (function_to_run, temp_df) in enumerate(functions_to_run_dict.items()):
             title = f"All Time {function_to_run} of {description}" 
-            axes[i].tick_params(axis='both', labelsize=18)
+            axes[i].tick_params(axis='both', labelsize=16)
             sns.heatmap(temp_df, annot=True, ax=axes[i], annot_kws={"fontsize":20}).set_title(title, fontsize = 20);
 
 
