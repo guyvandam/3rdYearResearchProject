@@ -43,14 +43,15 @@ class ResultsAnalysis:
             description = "Transfer Entropy Divided by Joint Entropy"
         
         df.rename(columns=lambda x: x.replace("_", "->"), inplace=True)
-        columns_to_plot = [col for col in df.columns if len(set(col.split("->"))) > 1]
+        # columns_to_plot = [col for col in df.columns if len(set(col.split("->"))) > 1]
+        columns_to_plot = ["BTCUSDT->ETHUSDT", "ETHUSDT->BTCUSDT", "BTCUSDT->ADAUSDT", "ADAUSDT->BTCUSDT", "ETHUSDT->ADAUSDT", "ADAUSDT->ETHUSDT"]
         title = f"{description} Between Pairs as Time Dependent Variables" 
-       
+        
         plt.rc('legend',**{'fontsize':15})
-
+        
         df[columns_to_plot].plot(layout=(self.ncols, self.ncols-1), subplots=True, figsize=(15,12), fontsize=15)
         fig = plt.gcf()
-        fig.suptitle(title, fontsize=16)
+        fig.suptitle(title, fontsize=23)
 
         filename = self.folder + "/time_dependent_variables.jpg"
         plt.savefig(filename)
