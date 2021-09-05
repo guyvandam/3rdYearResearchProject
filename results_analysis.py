@@ -128,7 +128,7 @@ class ResultsAnalysis:
     def create_std_heatmap(self, df=None):
         self.__create_heatmap(df, "Std")
 
-    def create_heatmaps(self, df=None):
+    def create_mean_and_std_heatmaps(self, df=None):
         description = ""
         if df is None:
             df = self.div_df
@@ -150,15 +150,10 @@ class ResultsAnalysis:
         plt.close()
 
 
-    # def create_time_dependent_plot(self, df=None):
-    #     self.div_df.plot(subplots=True, figsize= (15,30))
-    #     filename = self.folder + f"/time_dependent.jpg"
-    #     plt.savefig(filename)
-    #     plt.close()
 
 if __name__ == "__main__":
 
-    ra = ResultsAnalysis("09-02-2021__14:51:26")
+    ra = ResultsAnalysis("09-02-2021__14:53:22")
     ra.initialize()
 
     # ra.create_histogram_plot()
@@ -166,5 +161,5 @@ if __name__ == "__main__":
     # ra.create_std_heatmap()
     # ra.create_time_dependent_plot()
     # ra.create_time_dependent_plot()
-    ra.create_heatmaps()
+    ra.create_mean_and_std_heatmaps()
     

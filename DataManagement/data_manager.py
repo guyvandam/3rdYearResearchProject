@@ -6,7 +6,6 @@ sys.path.append('./')
 from DataManagement.pre_processing_functions import PreProcess
 from DataManagement.file_path_manager import FilePathManager
 from DataManagement.research_coin_symbols import research_ocin_symbol_list
-from DataManagement.coin_data import CoinData
 from dateutil import parser
 from binance.client import Client
 import pandas as pd
@@ -25,19 +24,11 @@ class DataManager:
         self.file_path_manager_obj = FilePathManager()
         self.pre_process_obj = PreProcess()
 
-        # API_KEY = '7NHvWCOeZH6vYvTsjel1GJ3ab1bf59lYXVAsyLa8KEH6nIQG7zD7546s2HF86Gdq'
-        # API_SECRET = 'dU3sV6hd5rfkwT8iNtK2wFjAyJMvAfl9ywGQcZyIXAvI5CGz19z90wmKrNs1EgJX'
-
-        # self.binance_client = Client(api_key=API_KEY, api_secret=API_SECRET)
-
     def _initialize_binance_client(self):
         API_KEY = '7NHvWCOeZH6vYvTsjel1GJ3ab1bf59lYXVAsyLa8KEH6nIQG7zD7546s2HF86Gdq'
         API_SECRET = 'dU3sV6hd5rfkwT8iNtK2wFjAyJMvAfl9ywGQcZyIXAvI5CGz19z90wmKrNs1EgJX'
 
         self.binance_client = Client(api_key=API_KEY, api_secret=API_SECRET)
-
-    def get_historical_data_CoinData(self, symbol: str, kline_size: str) -> CoinData:
-        return CoinData(self.get_historical_data_DataFrame(symbol, kline_size), symbol, kline_size_string=kline_size)
 
     def get_historical_data_DataFrame(self, symbol, kline_size, is_fillnan : bool = True) -> pd.DataFrame:
         symbol = symbol.upper()
