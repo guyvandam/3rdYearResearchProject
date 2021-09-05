@@ -1,5 +1,4 @@
 from HistoricalTransferEntropy import HistoricalTransferEntropy
-from constants import *
 
 
 def main():

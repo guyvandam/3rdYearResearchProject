@@ -1,4 +1,3 @@
-from TransferEntropy.TransferEntropy import TransferEntropy
 from TransferEntropy.transfer_entropy import get_transfer_entropy
 from TransferEntropy.estimate_entropy_using_copulas import estimateEntropyUsingCopulas as EEC
 from transfer_entropy_functions import get_dataframe_different_assets

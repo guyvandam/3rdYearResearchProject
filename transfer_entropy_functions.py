@@ -71,23 +71,3 @@ def get_transfer_entropy_matrix_wrapper(raw_df, L=3, is_divide_by_joint_entropy=
     df.dropna(how="any", inplace=True)
     return get_transfer_entropy_matrix(df, L=L, is_divide_by_joint_entropy=is_divide_by_joint_entropy)
 
-
-# def create_windows(data: list, window_size: int):
-#     windows = []
-#     data_length = len(data)
-#     start_index = 0
-#     end_index = start_index + window_size
-#     while
-
-
-if __name__ == "__main__":
-    coin_symbol_list = ["BTCUSDT", "ETHUSDT", "ADAUSDT", "LTCUSDT"]
-    kline_size = "1h"
-    main_coin_symbol = "BTCUSDT"
-    transfer_entropy_lookback = 1
-
-    coin_data_list = [data_manager.get_historical_data_CoinData(coin_symbol, kline_size="1m") for coin_symbol in
-                      coin_symbol_list]
-    one_min_df = join_dataframes(coin_data_list=coin_data_list, shift=0)
-
-    get_transfer_entropy_matrix(one_min_df)

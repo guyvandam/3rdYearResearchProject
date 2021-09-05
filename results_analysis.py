@@ -4,18 +4,18 @@ import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
 
+
 def read_csv_wrapper(filepath) -> pd.DataFrame:
-    df = pd.read_csv(filepath, index_col = 0)
-    df.set_index(pd.to_datetime(df.index), inplace = True)
+    df = pd.read_csv(filepath, index_col=0)
+    df.set_index(pd.to_datetime(df.index), inplace=True)
     return df
 
 
 class ResultsAnalysis:
 
-
-    def __init__(self,run_timestamp):
+    def __init__(self, run_timestamp):
         self.run_timestamp = run_timestamp
-        
+
         self.div_df = None
         self.te_df = None
         self.je_df = None
@@ -30,27 +30,27 @@ class ResultsAnalysis:
         self.je_df = read_csv_wrapper(f"{self.folder}/JointEntropy.csv")
         self.te_df = read_csv_wrapper(f"{self.folder}/TransferEntropy.csv")
         self.info_df = pd.read_csv(f"{self.folder}/info.csv")
-        self.div_df = self.te_df/self.je_df
-        
+        self.div_df = self.te_df / self.je_df
+
         self.asset_list = [col.strip('assets:').strip(" '") for col in self.info_df.columns]
         self.asset_string = '_'.join(self.asset_list)
         self.ncols = len(self.asset_list)
-
 
     def create_time_dependent_plot(self, df=None):
         description = ""
         if df is None:
             df = self.div_df
             description = "Transfer Entropy Divided by Joint Entropy"
-        
+
         df.rename(columns=lambda x: x.replace("_", "->"), inplace=True)
         # columns_to_plot = [col for col in df.columns if len(set(col.split("->"))) > 1]
-        columns_to_plot = ["BTCUSDT->ETHUSDT", "ETHUSDT->BTCUSDT", "BTCUSDT->ADAUSDT", "ADAUSDT->BTCUSDT", "ETHUSDT->ADAUSDT", "ADAUSDT->ETHUSDT"]
-        title = f"{description} Between Pairs as Time Dependent Variables" 
-        
-        plt.rc('legend',**{'fontsize':15})
-        
-        df[columns_to_plot].plot(layout=(self.ncols, self.ncols-1), subplots=True, figsize=(15,12), fontsize=15)
+        columns_to_plot = ["BTCUSDT->ETHUSDT", "ETHUSDT->BTCUSDT", "BTCUSDT->ADAUSDT", "ADAUSDT->BTCUSDT",
+                           "ETHUSDT->ADAUSDT", "ADAUSDT->ETHUSDT"]
+        title = f"{description} Between Pairs as Time Dependent Variables"
+
+        plt.rc('legend', **{'fontsize': 15})
+
+        df[columns_to_plot].plot(layout=(self.ncols, self.ncols - 1), subplots=True, figsize=(15, 12), fontsize=15)
         fig = plt.gcf()
         fig.suptitle(title, fontsize=23)
 
@@ -58,33 +58,31 @@ class ResultsAnalysis:
         plt.savefig(filename)
         plt.close()
 
-    def create_histogram_plot(self, df = None):
+    def create_histogram_plot(self, df=None):
         description = ""
         if df is None:
             df = self.div_df
             description = "Transfer Entropy Divided by Joint Entropy"
 
-        
-        fig, axes = plt.subplots(ncols=self.ncols, nrows=self.ncols, figsize=(18,18));
-        
-        
-        i, j = 0,0
+        fig, axes = plt.subplots(ncols=self.ncols, nrows=self.ncols, figsize=(18, 18));
+
+        i, j = 0, 0
         for col in df.columns:
             if j == self.ncols:
                 j = 0
-                i+=1
-            df[col].hist(ax=axes[i,j], density=True);
-            axes[i,j].tick_params(axis='both', labelsize=15)
+                i += 1
+            df[col].hist(ax=axes[i, j], density=True);
+            axes[i, j].tick_params(axis='both', labelsize=15)
             if j == 0:
-                axes[i,j].set_ylabel(self.asset_list[i], fontsize = 15)
+                axes[i, j].set_ylabel(self.asset_list[i], fontsize=15)
             if i == 0:
-                axes[i,j].set_xlabel(self.asset_list[j], fontsize = 15)    
-                axes[i,j].xaxis.set_label_position('top') 
-                
-            j+=1
+                axes[i, j].set_xlabel(self.asset_list[j], fontsize=15)
+                axes[i, j].xaxis.set_label_position('top')
+
+            j += 1
         filename = self.folder + "/histogram.jpg"
-        title = f"Histograms of {description} Between Pairs" 
-        
+        title = f"Histograms of {description} Between Pairs"
+
         fig.suptitle(title, fontsize=25)
 
         plt.savefig(filename)
@@ -92,16 +90,16 @@ class ResultsAnalysis:
 
     def __get_matrix_df(self, series):
 
-        i, j = 0,0
+        i, j = 0, 0
         matrix = np.empty(shape=(self.ncols, self.ncols))
         for col in series.index:
             if j == self.ncols:
                 j = 0
-                i+=1
-            
+                i += 1
+
             matrix[i, j] = series[col]
-                
-            j+=1
+
+            j += 1
 
         return pd.DataFrame(data=matrix, index=self.asset_list, columns=self.asset_list)
 
@@ -115,8 +113,8 @@ class ResultsAnalysis:
             matrix_df = self.__get_matrix_df(df.mean())
         elif function_to_run == "Std":
             matrix_df = self.__get_matrix_df(df.std())
-        
-        title = f"All Time {function_to_run} of {description}" 
+
+        title = f"All Time {function_to_run} of {description}"
         sns.heatmap(matrix_df, annot=True).set_title(title);
         filename = self.folder + f"/{function_to_run}_heatmap.jpg"
         plt.savefig(filename)
@@ -133,26 +131,23 @@ class ResultsAnalysis:
         if df is None:
             df = self.div_df
             description = "Transfer Entropy / Joint Entropy"
-        
+
         mean_df = self.__get_matrix_df(df.mean())
         std_df = self.__get_matrix_df(df.std())
         sns.set(font_scale=1.5)
-        _, axes = plt.subplots(ncols=2, nrows=1, figsize=(18,8));
-        functions_to_run_dict = {"Mean":mean_df, "Std":std_df}
+        _, axes = plt.subplots(ncols=2, nrows=1, figsize=(18, 8));
+        functions_to_run_dict = {"Mean": mean_df, "Std": std_df}
         for i, (function_to_run, temp_df) in enumerate(functions_to_run_dict.items()):
-            title = f"All Time {function_to_run} of {description}" 
+            title = f"All Time {function_to_run} of {description}"
             axes[i].tick_params(axis='both', labelsize=16)
-            sns.heatmap(temp_df, annot=True, ax=axes[i], annot_kws={"fontsize":20}).set_title(title, fontsize = 20);
-
+            sns.heatmap(temp_df, annot=True, ax=axes[i], annot_kws={"fontsize": 20}).set_title(title, fontsize=20);
 
         filename = self.folder + "/heatmaps.jpg"
         plt.savefig(filename)
         plt.close()
 
 
-
 if __name__ == "__main__":
-
     ra = ResultsAnalysis("09-02-2021__14:53:22")
     ra.initialize()
 
@@ -162,4 +157,3 @@ if __name__ == "__main__":
     # ra.create_time_dependent_plot()
     # ra.create_time_dependent_plot()
     ra.create_mean_and_std_heatmaps()
-    
