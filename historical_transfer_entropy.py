@@ -56,6 +56,7 @@ class HistoricalTransferEntropy:
 
         start_time = time.time()
         dir_name = datetime.now().strftime("%m-%d-%Y__%H:%M:%S")
+        execution_timestamp = dir_name
 
         # prepare the windows:
         sub_tf_tuples = list(self.one_m_df.resample(sub_tf))
@@ -169,4 +170,4 @@ class HistoricalTransferEntropy:
         print(f"--- finished in {round(time.time() - start_time, 1)} seconds ---")
         print()
 
-        return TE_df, JE_df
+        return TE_df, JE_df, execution_timestamp
